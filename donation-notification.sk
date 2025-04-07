@@ -1,0 +1,31 @@
+command /topup <text> <number>:
+    permission: trakteer.use
+    trigger:
+        # Mengecek apakah target pemain dan jumlah topup valid
+        if arg-1 or arg-2 is not set:
+            send "&e&lDonation System &7» &cTolong masukkan nama pemain dan jumlah topup yang valid!" to player
+            stop
+        set {_target} to arg-1
+        set {_amount} to arg-2
+        
+        # Mengirim pengumuman chat ke semua pemain
+        loop all players:
+            # Subtitle and Title Notification ke semua pemain online
+            send title "&c%{_target}%" with subtitle "&ftelah topup sebesar &b💎 %{_amount}%&a!" to loop-player
+            send " " to loop-player
+            send "&7[&c&l!&7] &fTerimakasih, &c&n%{_target}%&f telah topup sebesar &b💎 %{_amount}%&f! [/store]" to loop-player
+            send " " to loop-player
+            play sound "entity.player.levelup" with volume 1 and pitch 1.2 to loop-player
+            wait 5 tick
+            play sound "entity.experience_orb.pickup" with volume 1 and pitch 1.5 to loop-player
+            wait 5 tick
+            play sound "block.note_block.pling" with volume 1 and pitch 2 to loop-player
+            wait 5 tick
+            play sound "entity.player.levelup" with volume 1 and pitch 1.2 to loop-player
+            wait 5 tick
+            play sound "entity.experience_orb.pickup" with volume 1 and pitch 1.5 to loop-player
+            wait 5 tick
+            play sound "block.note_block.pling" with volume 1 and pitch 2 to loop-player
+
+        # Menjalankan perintah di console setelah semua pemain mendapatkan pengumuman
+        send "&e&lDonation System &7» Sukses terkirim" to player
