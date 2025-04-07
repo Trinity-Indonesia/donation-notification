@@ -1,5 +1,5 @@
 command /topup <text> <number>:
-    permission: trakteer.use
+    permission: trakteer.use # Ubah permission atau izin disini
     trigger:
         # Mengecek apakah target pemain dan jumlah topup valid
         if arg-1 or arg-2 is not set:
@@ -28,4 +28,5 @@ command /topup <text> <number>:
             play sound "block.note_block.pling" with volume 1 and pitch 2 to loop-player
 
         # Menjalankan perintah di console setelah semua pemain mendapatkan pengumuman
+        execute console command "gems give %{_target}% %{_amount}%" # Ubah sesuai command yang diinginkan
         send "&e&lDonation System &7» Sukses terkirim" to player
