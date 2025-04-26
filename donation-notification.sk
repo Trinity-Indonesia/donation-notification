@@ -11,9 +11,9 @@ command /topup <text> <number>:
         # Mengirim pengumuman chat ke semua pemain
         loop all players:
             # Subtitle and Title Notification ke semua pemain online
-            send title "&c%{_target}%" with subtitle "&ftelah topup sebesar &b💎 %{_amount}%&a!" to loop-player
+            send title "&c%{_target}%" with subtitle "&ftelah topup sebesar &b💎 %{_amount}%&a!" to loop-player # Ubah Premium Currency-mu Disini
             send " " to loop-player
-            send "&7[&c&l!&7] &fTerimakasih, &c&n%{_target}%&f telah topup sebesar &b💎 %{_amount}%&f! [/store]" to loop-player
+            send "&7[&c&l!&7] &fTerimakasih, &c&n%{_target}%&f telah topup sebesar &b💎 %{_amount}%&f! [/store]" to loop-player # Ubah Premium Currency-mu Disini
             send " " to loop-player
             play sound "entity.player.levelup" with volume 1 and pitch 1.2 to loop-player
             wait 5 tick
