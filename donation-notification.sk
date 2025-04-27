@@ -1,32 +1,71 @@
 command /topup <text> <number>:
-    permission: trakteer.use # Ubah permission atau izin disini
+    permission: trakteer.use
+    usage: &c&lᴛʀɪ&f&lɪᴅ &7» &fUsage: /topup <player> <amount>
+    description: Announces player topups with a "GG wave" effect using sudo
     trigger:
-        # Mengecek apakah target pemain dan jumlah topup valid
-        if arg-1 or arg-2 is not set:
-            send "&e&lDonation System &7» &cTolong masukkan nama pemain dan jumlah topup yang valid!" to player
+        # Validasi parameter input
+        if argument 1 or argument 2 is not set:
+            send "&c&lERROR &8» &fPlease enter a valid player name and topup amount!" to player
             stop
-        set {_target} to arg-1
-        set {_amount} to arg-2
         
-        # Mengirim pengumuman chat ke semua pemain
+        set {_target} to argument 1
+        set {_amount} to argument 2
+        set {_prefix} to "&c&lᴛʀɪ&f&lɪᴅ &8»"
+        
+        # Create list of GG messages for the wave effect
+        set {_gg_messages::*} to "GG" and "Makasih!" and "Mantap!" and "Keren!" and "Wow!" and "Gacor!" and "Kece!"
+        
+        set {_donor} to {_target} parsed as player
+        
+        if {_donor} is online:
+            # Create a particle effect around the donor
+            execute console command "execute at %{_donor}% run particle totem ~ ~1 ~ 0.5 0.5 0.5 0.5 100"
+            execute console command "execute at %{_donor}% run particle end_rod ~ ~1 ~ 0.5 1 0.5 0.1 50"
+            execute console command "execute at %{_donor}% run particle flame ~ ~0.5 ~ 0.3 0.3 0.3 0.05 30"
+            
+            loop 5 times:
+                wait 10 ticks
+                execute console command "execute at %{_donor}% run particle heart ~ ~2 ~ 0.5 0.5 0.5 0.1 15"
+                execute console command "execute at %{_donor}% run particle firework ~ ~1 ~ 0.5 0.5 0.5 0.1 20"
+        
         loop all players:
-            # Subtitle and Title Notification ke semua pemain online
-            send title "&c%{_target}%" with subtitle "&ftelah topup sebesar &b💎 %{_amount}%&a!" to loop-player # Ubah Premium Currency-mu Disini
+            # Send title announcement
+            send title "&c%{_target}%" with subtitle "&ftelah topup sebesar &b💎 %{_amount}%&a!" to loop-player for 5 seconds
+            
             send " " to loop-player
-            send "&7[&c&l!&7] &fTerimakasih, &c&n%{_target}%&f telah topup sebesar &b💎 %{_amount}%&f! [/store]" to loop-player # Ubah Premium Currency-mu Disini
+            send "&7[&c&l!&7] &fTerimakasih, &c&n%{_target}%&f telah topup sebesar &b💎 %{_amount}%&f! [/store]" to loop-player
             send " " to loop-player
+            
             play sound "entity.player.levelup" with volume 1 and pitch 1.2 to loop-player
-            wait 5 tick
-            play sound "entity.experience_orb.pickup" with volume 1 and pitch 1.5 to loop-player
-            wait 5 tick
-            play sound "block.note_block.pling" with volume 1 and pitch 2 to loop-player
-            wait 5 tick
-            play sound "entity.player.levelup" with volume 1 and pitch 1.2 to loop-player
-            wait 5 tick
-            play sound "entity.experience_orb.pickup" with volume 1 and pitch 1.5 to loop-player
-            wait 5 tick
-            play sound "block.note_block.pling" with volume 1 and pitch 2 to loop-player
-
-        # Menjalankan perintah di console setelah semua pemain mendapatkan pengumuman
-        execute console command "gems give %{_target}% %{_amount}%" # Ubah sesuai command yang diinginkan
-        send "&e&lDonation System &7» Sukses terkirim" to player
+        
+        wait 20 ticks
+        
+        set {_online_players::*} to all players
+        set {_player_count} to size of {_online_players::*}
+        
+        if {_player_count} > 0:
+            loop 10 times:
+                # Choose random player for this wave iteration
+                set {_random_player_index} to random integer between 1 and {_player_count}
+                set {_random_player} to {_online_players::%{_random_player_index}%}
+                
+                # Choose random message
+                set {_msg_index} to random integer between 1 and size of {_gg_messages::*}
+                set {_message} to {_gg_messages::%{_msg_index}%}
+                
+                # Make player say the GG message using sudo
+                execute console command "sudo %{_random_player}% c:%{_message}%"
+                
+                # Play sound effects for all players
+                loop all players:
+                    play sound "entity.experience_orb.pickup" with volume 1 and pitch (1 + (loop-number / 10)) to loop-player
+                
+                wait 5 ticks
+        
+        if {_donor} is online:
+            execute console command "execute at %{_donor}% run particle firework ~ ~1 ~ 0.5 0.5 0.5 0.5 100"
+            execute console command "execute at %{_donor}% run particle totem ~ ~1 ~ 0.5 1 0.5 0.3 80"
+        
+        send " " to player
+        send "%{_prefix}% &aSuccessfully sent &b💎 %{_amount}% &ato &f%{_target}%&a!" to player
+        play sound "entity.experience_orb.pickup" with volume 1 and pitch 2 to player
