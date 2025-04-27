@@ -1,5 +1,5 @@
 command /topup <text> <number>:
-    permission: trakteer.use
+    permission: donation.use
     usage: &c&lᴛʀɪ&f&lɪᴅ &7» &fUsage: /topup <player> <amount>
     description: Announces player topups with a "GG wave" effect using sudo
     trigger:
