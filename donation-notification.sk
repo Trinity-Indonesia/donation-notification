@@ -1,5 +1,6 @@
 command /topup <text> <number>:
     permission: donation.use
+    # Set Message Error
     usage: &c&lᴛʀɪ&f&lɪᴅ &7» &fUsage: /topup <player> <amount>
     description: Announces player topups with a "GG wave" effect using sudo
     trigger:
@@ -10,6 +11,7 @@ command /topup <text> <number>:
         
         set {_target} to argument 1
         set {_amount} to argument 2
+        # Set Prefix Message
         set {_prefix} to "&c&lᴛʀɪ&f&lɪᴅ &8»"
         
         # Create list of GG messages for the wave effect
@@ -18,7 +20,7 @@ command /topup <text> <number>:
         set {_donor} to {_target} parsed as player
         
         if {_donor} is online:
-            # Create a particle effect around the donor
+            # Create a particle effect around the donor, required SkParticel
             execute console command "execute at %{_donor}% run particle totem ~ ~1 ~ 0.5 0.5 0.5 0.5 100"
             execute console command "execute at %{_donor}% run particle end_rod ~ ~1 ~ 0.5 1 0.5 0.1 50"
             execute console command "execute at %{_donor}% run particle flame ~ ~0.5 ~ 0.3 0.3 0.3 0.05 30"
@@ -31,31 +33,23 @@ command /topup <text> <number>:
         loop all players:
             # Send title announcement
             send title "&c%{_target}%" with subtitle "&ftelah topup sebesar &b💎 %{_amount}%&a!" to loop-player for 5 seconds
-            
+            # Send messages announcement
             send " " to loop-player
             send "&7[&c&l!&7] &fTerimakasih, &c&n%{_target}%&f telah topup sebesar &b💎 %{_amount}%&f! [/store]" to loop-player
             send " " to loop-player
-            
             play sound "entity.player.levelup" with volume 1 and pitch 1.2 to loop-player
         
         wait 20 ticks
-        
         set {_online_players::*} to all players
         set {_player_count} to size of {_online_players::*}
         
         if {_player_count} > 0:
             loop 10 times:
-                # Choose random player for this wave iteration
                 set {_random_player_index} to random integer between 1 and {_player_count}
                 set {_random_player} to {_online_players::%{_random_player_index}%}
-                
-                # Choose random message
                 set {_msg_index} to random integer between 1 and size of {_gg_messages::*}
                 set {_message} to {_gg_messages::%{_msg_index}%}
-                
-                # Make player say the GG message using sudo
                 execute console command "sudo %{_random_player}% c:%{_message}%"
-                
                 # Play sound effects for all players
                 loop all players:
                     play sound "entity.experience_orb.pickup" with volume 1 and pitch (1 + (loop-number / 10)) to loop-player
