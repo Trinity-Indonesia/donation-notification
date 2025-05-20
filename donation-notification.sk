@@ -21,9 +21,9 @@ command /topup <text> <number>:
         
         if {_donor} is online:
             # Create a particle effect around the donor, required SkParticel
-            execute console command "execute at %{_donor}% run particle totem ~ ~1 ~ 0.5 0.5 0.5 0.5 100"
-            execute console command "execute at %{_donor}% run particle end_rod ~ ~1 ~ 0.5 1 0.5 0.1 50"
-            execute console command "execute at %{_donor}% run particle flame ~ ~0.5 ~ 0.3 0.3 0.3 0.05 30"
+            execute console command "execute at %{_donor}% run particle totem ~ ~1 ~ 0.4 0.5 0.5 0.5 100"
+            execute console command "execute at %{_donor}% run particle end_rod ~ ~1 ~ 0.4 1 0.5 0.1 50"
+            execute console command "execute at %{_donor}% run particle flame ~ ~0.5 ~ 0.4 0.3 0.3 0.05 30"
             
             loop 5 times:
                 wait 10 ticks
